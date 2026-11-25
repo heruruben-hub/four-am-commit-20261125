@@ -32,12 +32,18 @@ def commit_message() -> str:
 
 
 def validate(message: str) -> None:
-    """Check the message fits the gate: 1-200 chars, not only whitespace."""
+    """Check the message fits the gate: 1-200 chars, not only whitespace.
+
+    Also require a single line with no trailing newline: the gate counts
+    every character, and a trailing newline would both waste a byte on
+    the size tie-break and risk the entry reading as two lines.
+    """
     assert MIN_LEN <= len(message) <= MAX_LEN, (
         f"message is {len(message)} chars, must be {MIN_LEN}-{MAX_LEN}"
     )
     assert message.strip(), "message must not be only whitespace"
     assert "\n" not in message, "message must be a single line"
+    assert message == message.strip(), "message must have no leading/trailing whitespace"
 
 
 def main() -> None:
